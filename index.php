@@ -446,7 +446,7 @@
                     <div class="row-1-1">
                         <p id="textLoopers">loopers</p>
                         <p>:</p>
-                        <p id="loopers">0</p>
+                        <p id="loopers">0 / 20</p>
                     </div>
                 </div>
 

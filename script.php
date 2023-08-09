@@ -59,6 +59,8 @@ const quitButton = document.getElementById("quitButton");
 const towersRadiusBase = 75;
 let selectedTower;
 
+let maxLoopers = 20;
+
 let totalMobsBox = document.getElementById("totalMobs");
 let totalMobs = 0;
 let mobsKilledBox = document.getElementById("mobsKilled");
@@ -1400,7 +1402,7 @@ class Mob {
         this.baseSpeed = speed,
         this.speedMultiplier = 1,
         this.speed = this.baseSpeed * this.speedMultiplier,
-        this.hp = hp * ((waveNumber + 1) / 2) * (waveNumber / 10),
+        this.hp = hp * ((waveNumber + 1) / 2) * (waveNumber / 5),
         this.previousHp = this.hp,
         this.maxHp = this.hp,        
         this.size = (8 / this.maxHp * this.hp) / 600 * gridSizes,
@@ -1499,7 +1501,7 @@ class Mob {
                 //mobs.splice(0, mobs.length);
                 //console.log("end");
                 loopers++;
-                loopersBox.textContent = loopers.toLocaleString("en-US");
+                loopersBox.textContent = loopers.toLocaleString("en-US") + " / " + maxLoopers;
                 this.pathSegment = 0;
                 this.x = paths[pathSeed][this.pathSegment][0];
                 this.y = paths[pathSeed][this.pathSegment][1];
@@ -1754,7 +1756,7 @@ function reload() {
         document.documentElement.style.setProperty("--currentWaveColor", "transparent");
         //mobsType.style.boxShadow = "none";
         mobsLeft.textContent = "";
-        mobsHpNext.textContent = mobsBaseHp * (((1) + 1) / 2) * ((1) / 10).toLocaleString("en-US");
+        mobsHpNext.textContent = mobsBaseHp * (((1) + 1) / 2) * ((1) / 5).toLocaleString("en-US");
         mobsSpeedNext.textContent = wavesSettings[1][0]; // types[1] = bleu
         mobsTypeNext.style.background = "hsl(" + types[1] + " , 100%, 50%)";
         document.documentElement.style.setProperty("--nextWaveColor", "hsla(" + types[1] + " , 100%, 50%, .5)");
@@ -1834,7 +1836,7 @@ function waveInit() {
         //hueGridIsOn = false;
         //updateGrid();
         animate(0);
-        mobsHpNext.textContent = (mobsBaseHp * (((waveNumber+1) + 1) / 2) * ((waveNumber+1) / 10)).toLocaleString("en-US");
+        mobsHpNext.textContent = (mobsBaseHp * (((waveNumber +1 ) + 1) / 2) * ((waveNumber + 1) / 5)).toLocaleString("en-US");
         waveSpeed = wavesSettings[nextWaveSettings][0];
         mobsSpeedNext.textContent = waveSpeed;
         waveColor = wavesSettings[nextWaveSettings][1];
@@ -3005,7 +3007,7 @@ const lastWave = document.getElementById("lastWave");
 let endGameScreen = false;
 function checkScore() {
     //console.log("debut de checkScore()");
-    if (score < 0) {  // affichage de l'écran de fin de partie
+    if (score < 0 || loopers >= maxLoopers) {  // affichage de l'écran de fin de partie
         gameIsOver = true;
         launchText.textContent = staticTranslations[gameLanguage][toTranslate.length + 3];
         mapName.textContent = levelsName[pathSeed];
@@ -3205,7 +3207,7 @@ function scoreUpdateBoxUpdate(sign, value) {
     }
 }
 // affichage des données de la première vague
-mobsHpNext.textContent = mobsBaseHp * (((1) + 1) / 2) * ((1) / 10).toLocaleString("en-US");
+mobsHpNext.textContent = mobsBaseHp * (((1) + 1) / 2) * ((1) / 5).toLocaleString("en-US");
 mobsSpeedNext.textContent = wavesSettings[1][0]; // types[1] = bleu
 mobsTypeNext.style.background = "hsl(" + types[1] + " , 100%, 50%)";
 mobsLeftNext.textContent = maxMobs;
