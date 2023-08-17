@@ -2170,7 +2170,6 @@ const paths = [
         [3, 8],
         [3, 11],
         [2, 11],
-        [2, 13],
         [2, 14],
         [6, 14],
         [6, 2],
@@ -2275,7 +2274,7 @@ class Path {
                 let currentY = this.path[i][1];
                 //console.log("b "+currentX+" "+previousX);
                 //console.log("c "+currentY+" "+previousY);
-                // on détermine la direction du départ
+                // on détermine la direction du segment
                 if (currentX == previousX) {
                     var gap = currentY - previousY;
                     if (currentY > previousY) {
@@ -2294,7 +2293,7 @@ class Path {
                         this.direction = "left";
                     }
                 }
-                console.log("direction départ= "+this.direction);
+                console.log("direction segment= "+this.direction);
                 if (gap < 0) {
                     gap = gap * -1;
                 }
@@ -2313,7 +2312,7 @@ class Path {
                         case "top":
                             if (this.previousDirection == "right") {
                                 //ctxGrid.fillStyle = pathWayColor;
-                                let cellId = gridSize * this.path[i - 1][0] + this.path[i - 1][1];
+                                let cellId = gridSize * this.path[i - 1][1] + this.path[i - 1][0];
                                 cellulesArray[cellId].isLocked = true;
                                 ctxGrid.fillRect(this.path[i - 1][0] * cellSize, this.path[i - 1][1] * cellSize, cellSize, cellSize);
                                 ctxGrid.strokeRect(this.path[i - 1][0] * cellSize, this.path[i - 1][1] * cellSize, cellSize, cellSize);
@@ -2670,7 +2669,7 @@ function reset() {
         cellulesArray.splice(0, cellulesArray.length);
         towers.splice(0, towers.length);
         mobs.splice(0, mobs.length);
-        waveSettings = 0;
+        waveSettings = 1;
         initGrid(cellSize);
         drawContext();
         hideInterface();

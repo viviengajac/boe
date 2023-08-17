@@ -279,7 +279,7 @@
                         <div class="display-user-guide" onclick="displayUserGuide()">
                             <p>Guide utilisateur</p>
                         </div>
-                        <p id="gameVersion">version : 0.2.073123</p>
+                        <p id="gameVersion">version : 0.2.081723</p>
                     </div>
                 </div>
             </div>
