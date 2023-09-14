@@ -98,7 +98,7 @@ const guildelineTranslations = [
 let gameLanguage = 1; // 0 = en; 1 = fr;
 // j'ai ajouté le préfixe "text" à l'id de tous les éléments html qui comportent un texte statique
 const toTranslate = document.querySelectorAll('[id^="text"]');
-console.log(toTranslate);
+//console.log(toTranslate);
 function updateLanguage() {
     for (let i = 0; i < toTranslate.length; i++) {    
         toTranslate[i].textContent = staticTranslations[gameLanguage][i];
@@ -218,7 +218,7 @@ class Cellule {
                 }
                 selectedTower = towers[this.towerId];
                 selectedTower.isSelected = true;
-                console.log("appel de selectedTower.updateOptions()");
+                //console.log("appel de selectedTower.updateOptions()");
                 selectedTower.updateOptions();
                 selectedTower.checkOptionsCost();
                 displayDatas(this.towerId, false);
@@ -273,7 +273,7 @@ function createTower() {
         towerDiv.style.width = towerImageRadius * 2 + "px";
         towerDiv.style.height = towerImageRadius * 2 + "px";
         towerDiv.style.left = mouse.x - towerImageRadius + "px";
-        console.log("scrollY= "+scrollY);
+        //console.log("scrollY= "+scrollY);
         towerDiv.style.top = mouse.y - towerImageRadius + scrollY + "px";
         towerDiv.style.opacity = 1;
     }, 10);
@@ -394,7 +394,7 @@ function pickTower(towerType) {
                 guideline.textContent = guildelineTranslations[gameLanguage][2];
                 // on doit changer l'aspect du div towerImage pour correspondre à la nouvelle tour sélectionnée
                 let towerImageRadius = (75 + (10 * pickedTowerType)) / 600 * gridSizes;
-                console.log("radius= "+towerImageRadius);
+                //console.log("radius= "+towerImageRadius);
                 let towerColorHSL = types[pickedTowerType];
                 let towerColor = "hsla(" + towerColorHSL + ", 100%, 50%, .15)";
                 towerDiv.style.borderColor = "hsla(" + towerColorHSL + ", 100%, 50%, .85)";
@@ -412,7 +412,7 @@ function pickTower(towerType) {
                 displayDatas(towerType, true);
             }
             else {
-                console.log("proc");
+                //console.log("proc");
                 guideline.textContent = guildelineTranslations[gameLanguage][4];
                 if (resetDisplay) {
                     clearTimeout(resetDisplay);
@@ -435,7 +435,7 @@ function pickTower(towerType) {
     }
     else {
         if (score >= towersCost[towerType]) {
-            console.log("2 "+towersCost[towerType]);
+            //console.log("2 "+towersCost[towerType]);
             if (resetDisplay) {
                 clearTimeout(resetDisplay);
             }
@@ -521,6 +521,7 @@ const optionSpec2 = document.getElementById("optionSpec2");
 const optionSpec2Cost = document.getElementById("spec2Cost");
 const optionDestroy = document.getElementById("optionDestroy");
 const mobsLeft = document.getElementById("mobsLeft");
+const towersSummary = document.getElementById("towersSummary");
 const towers = [];
 let optionsCost = [
     [optionLevelUp, 0],
@@ -974,7 +975,7 @@ class Tower {
         } */
         //console.log(optionsCost[1][1]);
         //console.log(this.optionSpec1Cost);
-        console.log(this);
+        //console.log(this);
         if (this.isSelected) {
             //levelUpCost.textContent = this.optionLevelUpCost.toLocaleString("en-US");
             //console.log("IMAGE=" + this.effects[0]);
@@ -1250,7 +1251,32 @@ class Tower {
             totalScoreBox.textContent = totalScore.toLocaleString("en-US");
             lastWaveScore += this.target.maxHp;
             lastWaveScoreBox.textContent = lastWaveScore.toLocaleString("en-US");
+
             this.killsCount ++;
+
+            if (this.killsCount === 1) {
+                let divSummary = document.createElement("div");
+                divSummary.classList.add("tower-kills-summary");
+                divSummary.setAttribute("id", "towerSum" + this.towerId);
+
+                let towerImg = document.createElement("div");
+                towerImg.classList.add("tower-kills-img");
+                towerImg.style.backgroundImage = 'url(./image/tower' + this.towerType + '.png)';
+                divSummary.appendChild(towerImg);
+
+                let towerKillsCount = document.createElement("div");
+                towerKillsCount.classList.add("tower-kills-count");
+                towerKillsCount.setAttribute("id", this.towerId);
+                towerKillsCount.textContent = 1;
+                divSummary.appendChild(towerKillsCount);
+
+                towersSummary.appendChild(divSummary);                
+            }
+            else {
+                let summaryKillsCount = document.getElementById(this.towerId);
+                summaryKillsCount.textContent = this.killsCount;                
+            }
+
             //console.log("appel de checkOptionsCost()");
             this.checkOptionsCost();
             checkScore();
@@ -1893,12 +1919,12 @@ function hueGrid(e) {
 
 //window.addEventListener("mousemove", hueGrid);
 
-let logFrame = 0;
+//let logFrame = 0;
 let totalFrames = 0;
 
 //control of fps
 let lastTime = 0;
-const fps = 120;
+const fps = 80;
 const nextFrame = 1000/fps;
 let timer = 0;
 let currentFrame = 0;
@@ -1912,11 +1938,13 @@ function animate(timeStamp) {
     //console.log(selectedTower);
     const deltaTime = timeStamp - lastTime;
     lastTime = timeStamp;
-/*     if (timeStamp == 0) {
-        requestAnimationFrame(animate);
-    } */
+
     //console.log(deltaTime);
-    if (timer > nextFrame && deltaTime < 1000) {
+    //console.log(timer + " ; " + nextFrame);
+
+    if (timer > nextFrame) {
+        
+        begin = Date.now();
         currentFrame++;
         //console.log("frame "+currentFrame);
         // waveSpeed = wavesSettings[waveSettings][0];
@@ -1936,31 +1964,27 @@ function animate(timeStamp) {
                     spawnSequence = false;
                     spawningMobId = 0;
                 }
-            }
-                //let mob = new Mob(spawnX, spawnY, waveSpeed, waveColor, id);
-                //mobs.push(mob);      
+            } 
         }
         
-        totalFrames++;
+        /* totalFrames++;
         if (logFrame == 1000) {  // affiche un console.log() toutes les 1000 frames
             //console.log(mobs)
             logFrame = 0;
         }
         else {
             logFrame++;
-        }
+        } */
         //console.log(cellulesArray);
-        
-        drawContext();
-        //console.log("appel de checkScore()");
-        //checkScore();
     
         if (spawnDelay > 0) {
             spawnDelay--;
         }
         
         timer = 0;
-       // requestAnimationFrame(animate);
+
+        drawContext();
+
     }
     else {
         timer += deltaTime;
@@ -1969,7 +1993,7 @@ function animate(timeStamp) {
         //console.log("wave end");
         //cancelAnimationFrame(animation);
         waveTime = new Date() - startTimeStamp;
-        console.log("cancel après "+totalFrames+" frames et "+waveTime/1000+"s");
+        //console.log("cancel après "+totalFrames+" frames et "+waveTime/1000+"s");
         totalFrames = 0;
         for (let i = 0; i < towers.length; i++) {
             if (towers[i]) {
@@ -2033,7 +2057,6 @@ function animate(timeStamp) {
         //console.log("ts= "+timeStamp+" ;delta= "+deltaTime+" ;timer= "+timer);
         requestAnimationFrame(animate);
     }
-    //let animation = requestAnimationFrame(animate);
 }
 let hueGridIsOn = false; 
 function updateGrid() {
@@ -2293,7 +2316,7 @@ class Path {
                         this.direction = "left";
                     }
                 }
-                console.log("direction segment= "+this.direction);
+                //console.log("direction segment= "+this.direction);
                 if (gap < 0) {
                     gap = gap * -1;
                 }
@@ -2644,6 +2667,11 @@ function reset() {
         confirmButton.textContent = staticTranslations[gameLanguage][toTranslate.length + 17];
         confirmButton.setAttribute("onclick", "pickLevel()");
         previewMapName.textContent = staticTranslations[gameLanguage][45];
+        let child = towersSummary.lastElementChild;
+        while (child) {
+            towersSummary.removeChild(child);
+            child = towersSummary.lastElementChild;
+        }
         if (gameIsOver) {
             scoreUpdate.classList.add("fade");
             canvas.style.boxShadow = "0 0 10px hsla(180, 100%, 50%, .5)";
@@ -2909,6 +2937,7 @@ const levelDatasBox = document.getElementById("levelDatas");
 const levelName = document.getElementById("levelName");
 const playersList = document.getElementById("playersList");
 const topPlayersTitle = document.getElementById("textTopPlayersTitle");
+const textTowersInventory = document.getElementById("textTowersInventory");
 function hideInterface() {
     for (let i = 0; i < waveDatasBox.length; i++) {
         let nodes = waveDatasBox[i].childNodes;
@@ -2930,6 +2959,7 @@ function hideInterface() {
     levelsPickContainer.style.pointerEvents = "all";
     levelDatasBox.style.opacity = 0;
     levelDatasBox.style.pointerEvents = "none";
+    textTowersInventory.style.opacity = 0;
 }
 hideInterface();
 function showInterface() {
@@ -2954,7 +2984,8 @@ function showInterface() {
     levelsPickContainer.style.pointerEvents = "none";
     levelDatasBox.style.opacity = 1;
     levelDatasBox.style.pointerEvents = "all";
-    levelName.textContent = levelsName[pathSeed];
+    levelName.textContent = levelsName[pathSeed];    
+    textTowersInventory.style.opacity = 1;
 }
 
 
@@ -3262,7 +3293,7 @@ function hideTooltip() {
     //tooltip.style.pointerEvents = "none";
 }
 function updateTooltip(msg) {
-    console.log("updateTooltip msg= " + msg);
+    //console.log("updateTooltip msg= " + msg);
     tooltipEffect.textContent = msg;
 }
 let playerHoversOptionSpec1 = false;
@@ -3436,6 +3467,7 @@ window.addEventListener("click", function(e) {
     let elementY = e.offsetY - cy;
     //console.log(elementX+" "+elementY);
     //console.log("SUBSTR= "+e.target.id);
+    //console.log("SUBSTR= "+e.target.className.substr(0, 11));
     //console.log("SUBSTR= "+e.target.id.substr(0, 5));
     //console.log("SUBSTR= "+e.target.id.substr(0, 6));
     if (!userHasPickedALevel) {
@@ -3459,6 +3491,8 @@ window.addEventListener("click", function(e) {
     else {
         if (selectedTower) {
             if (
+                e.target.className != "tower-kills-summary"
+                &&
                 e.target.id.substr(0, 5) != "tower"
                 &&
                 e.target.id != "launch"
@@ -3512,8 +3546,8 @@ window.addEventListener("click", function(e) {
                             optionIsLocked(optionSpec1Cost);
                         }
                         else if (!selectedTower.hasOptionSpec1) {
-                            console.log("ajout spec1 sur ");
-                            console.log(selectedTower);
+                            //console.log("ajout spec1 sur ");
+                            //console.log(selectedTower);
                             selectedTower.hasOptionSpec1 = true;
                             //selectedTower.checkOptionsCost();
                             //score -= selectedTower.optionSpec1Cost;
@@ -3581,6 +3615,21 @@ window.addEventListener("click", function(e) {
                 drawContext();
             }
         }
+        if (e.target.className === "tower-kills-summary") {
+            if (selectedTower) {
+                selectedTower.isSelected = false;
+                selectedTower = false;
+            }
+            selectedTower = towers[e.target.id.substr(-1)];
+            selectedTower.isSelected = true;
+            selectedTower.updateOptions();
+            selectedTower.checkOptionsCost();
+            clearDatas();
+            displayDatas(e.target.id.substr(-1), false);
+            if (!animationIsOn) {
+                drawContext();
+            }
+        }
     }
 });
 
@@ -3606,7 +3655,7 @@ function adjustGameSize() {
         else {
             newSize = window.innerHeight;
         }
-        console.log("adjust to "+ (newSize / 1.5 - 30));
+        //console.log("adjust to "+ (newSize / 1.5 - 30));
         gridSizes = (newSize / 1.5 - 30);
         canvas.width = gridSizes;
         canvas.height = gridSizes;
@@ -3665,5 +3714,5 @@ quitButton.classList.add("locked-button");
     //    towerDiv.style.top = mouse.y - towerImageRadius + scrollY + "px";
     //}
 }); */
-console.log("total cells= "+cellulesArray.length);
+//console.log("total cells= "+cellulesArray.length);
 </script>

@@ -489,9 +489,7 @@
                                 <h1 id="textTowersInventory" style="opacity: 0">towers inventory</h1>
                             </div>
                         </div>
-                        <div class="column-x2">
-
-                        </div>
+                        <div class="column-flex" id="towersSummary"></div>
                     </div>
 
                 </div>
