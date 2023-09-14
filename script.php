@@ -2917,7 +2917,7 @@ function closeUserGuide() {
 
 // gestion des éléments html
 
-const startScore = 100000; //changer pour mode dev ; doit être = 100 pour partie "normale"
+const startScore = 100; //changer pour mode dev ; doit être = 100 pour partie "normale"
 let score = startScore;
 let totalScore = score;
 let bufferScore = score;
@@ -3630,7 +3630,7 @@ window.addEventListener("click", function(e) {
             else {
                 selectedTowerId = e.target.id.substr(-1);
             }
-            console.log("id=" + selectedTowerId);
+            //console.log("id=" + selectedTowerId);
             selectedTower = towers[selectedTowerId];
             selectedTower.isSelected = true;
             selectedTower.updateOptions();
