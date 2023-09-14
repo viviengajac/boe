@@ -1775,7 +1775,7 @@ function reload() {
         mobsHealed = 0;
         mobsHealedBox.textContent = 0;
         loopers = 0;
-        loopersBox.textContent = 0;
+        loopersBox.textContent = 0 + " / " + maxLoopers;
         mobsHp.textContent = "";
         mobsSpeed.textContent = "";
         mobsType.style.background = "transparent";
@@ -2917,7 +2917,7 @@ function closeUserGuide() {
 
 // gestion des éléments html
 
-const startScore = 100; //changer pour mode dev ; doit être = 100 pour partie "normale"
+const startScore = 100000; //changer pour mode dev ; doit être = 100 pour partie "normale"
 let score = startScore;
 let totalScore = score;
 let bufferScore = score;
@@ -3620,12 +3620,23 @@ window.addEventListener("click", function(e) {
                 selectedTower.isSelected = false;
                 selectedTower = false;
             }
-            selectedTower = towers[e.target.id.substr(-1)];
+            let selectedTowerId = 0;
+            if (!isNaN(e.target.id.substr(-3))) {
+                selectedTowerId = e.target.id.substr(-3);
+            }
+            else if (!isNaN(e.target.id.substr(-2))) {
+                selectedTowerId = e.target.id.substr(-2);
+            }
+            else {
+                selectedTowerId = e.target.id.substr(-1);
+            }
+            console.log("id=" + selectedTowerId);
+            selectedTower = towers[selectedTowerId];
             selectedTower.isSelected = true;
             selectedTower.updateOptions();
             selectedTower.checkOptionsCost();
             clearDatas();
-            displayDatas(e.target.id.substr(-1), false);
+            displayDatas(selectedTowerId, false);
             if (!animationIsOn) {
                 drawContext();
             }
