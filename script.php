@@ -499,11 +499,31 @@ function pickTower(towerType) {
 function destroyTower() {
     if (selectedTower) {
         //towers.delete(selectedTower.towerId);
+        let childrens = document.getElementById("towersSummary").children;
+        //console.log(childrens);
+        for (let i = 0; i < childrens.length; i++) {
+            let children = childrens.item(i);
+            let selectedTowerId = 0;
+            if (!isNaN(children.id.substr(-3))) {
+                selectedTowerId = children.id.substr(-3);
+            }
+            else if (!isNaN(children.id.substr(-2))) {
+                selectedTowerId = children.id.substr(-2);
+            }
+            else {
+                selectedTowerId = children.id.substr(-1);
+            }
+            if (selectedTower.towerId === parseInt(selectedTowerId)) {
+                towersSummary.removeChild(children);
+            }
+        }
+
         cellulesArray[selectedTower.cellId].hasTower = false;
         cellulesArray[selectedTower.cellId].isLocked = false;
         delete towers[selectedTower.towerId];
         towersCounter[selectedTower.towerType]--;
         towersCounterBox[selectedTower.towerType].textContent = towersCounter[selectedTower.towerType];
+        
         clearDatas();
         window.removeEventListener("mousemove", hoverOptions);
         updateGrid();
@@ -1736,6 +1756,11 @@ function reload() {
             cellulesArray[i].hasTower = false;
             cellulesArray[i].isLocked = false;
             //cellulesArray[i].draw();
+        }
+        let child = towersSummary.lastElementChild;
+        while (child) {
+            towersSummary.removeChild(child);
+            child = towersSummary.lastElementChild;
         }
         //path.draw();
         //updateGrid();
